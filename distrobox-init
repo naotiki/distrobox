@@ -1462,7 +1462,7 @@ host_sockets="$(find /run/host/run \
 # create many problems with package managers thinking they have access to
 # system dbus or user auth cache misused.
 for host_socket in ${host_sockets}; do
-	container_socket="$(printf "%s" "${host_socket}" | sed 's|/run/host||g')"
+	container_socket="$(printf "%s" "${host_socket}" | sed 's|/run/host/||g' | sed -e 's/^/\//' )"
 	# Check if the socket already exists or the symlink already exists
 	if [ ! -S "${container_socket}" ] && [ ! -L "${container_socket}" ]; then
 		# link it.
