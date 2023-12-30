@@ -31,7 +31,7 @@ boxname=""
 # quoting and escaping
 tmpfile="$(mktemp -u)"
 verbose=0
-version="1.5.0.2"
+version="1.6.0.1"
 # initializing block of variables used in the manifest
 additional_flags=""
 additional_packages=""
@@ -203,6 +203,7 @@ run_distrobox() (
 
 	# Skip item if --name used and no match is found
 	if [ "${boxname}" != "" ] && [ "${boxname}" != "${name}" ]; then
+		rm -f "${tmpfile}"
 		return
 	fi
 
@@ -289,6 +290,10 @@ run_distrobox() (
 		args=": ;"
 		separator=""
 		for arg in ${init_hooks}; do
+			if [ -z "${arg}" ]; then
+				continue
+			fi
+
 			args="${args} ${separator} ${arg}"
 
 			# Prepare for the next line, if we already have a ';' or '&&', do nothing
@@ -308,12 +313,16 @@ run_distrobox() (
 		args=": ;"
 		separator=""
 		for arg in ${pre_init_hooks}; do
+			if [ -z "${arg}" ]; then
+				continue
+			fi
+
 			args="${args} ${separator} ${arg}"
 
 			# Prepare for the next line, if we already have a ';' or '&&', do nothing
 			# else prefer adding '&&'
-			if ! echo "${arg}" | grep -q ';[[:space:]]\{0,1\}$' &&
-				! echo "${arg}" | grep -q '&&[[:space:]]\{0,1\}$'; then
+			if ! echo "${arg}" | grep -E ';[[:space:]]\{0,1\}$' &&
+				! echo "${arg}" | grep -E '&&[[:space:]]\{0,1\}$'; then
 				separator="&&"
 			else
 				separator=""
@@ -330,7 +339,7 @@ run_distrobox() (
 		result_command="${result_command} --additional-packages $(sanitize_variable "${args}")"
 	fi
 	if [ -n "${volume}" ]; then
-		IFS=" "
+		IFS="¤"
 		for vol in ${volume}; do
 			result_command="${result_command} --volume $(sanitize_variable "${vol}")"
 		done

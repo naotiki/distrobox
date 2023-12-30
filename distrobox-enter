@@ -73,7 +73,7 @@ headless=0
 [ "$(id -ru)" -eq 0 ] && rootful=1 || rootful=0
 skip_workdir=0
 verbose=0
-version="1.5.0.2"
+version="1.6.0.1"
 
 # Source configuration files, this is done in an hierarchy so local files have
 # priority over system defaults
@@ -275,7 +275,7 @@ esac
 if ! command -v "${container_manager}" > /dev/null && [ "${dryrun}" -eq 0 ]; then
 	# Error: we need at least one between docker, podman or lilipod.
 	printf >&2 "Missing dependency: we need a container manager.\n"
-	printf >&2 "Please install one of podman,  docker or lilipod.\n"
+	printf >&2 "Please install one of podman, docker or lilipod.\n"
 	printf >&2 "You can follow the documentation on:\n"
 	printf >&2 "\tman distrobox-compatibility\n"
 	printf >&2 "or:\n"
